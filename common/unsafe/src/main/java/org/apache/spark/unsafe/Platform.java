@@ -203,9 +203,9 @@ public final class Platform {
     _UNSAFE.freeMemory(address);
   }
 
-  public static long reallocateMemory(long address, long oldSize, long newSize) {
+  public static MemoryAddress reallocateMemory(MemoryAddress address, long oldSize, long newSize) {
     long newMemory = _UNSAFE.allocateMemory(newSize);
-    copyMemory(null, address, null, newMemory, oldSize);
+    copyMemory(address, 0, newMemory, 0, oldSize);
     freeMemory(address);
     return newMemory;
   }
