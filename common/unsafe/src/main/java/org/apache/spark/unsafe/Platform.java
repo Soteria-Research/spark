@@ -195,7 +195,7 @@ public final class Platform {
     _UNSAFE.putObjectVolatile(object, offset, value);
   }
 
-  public static long allocateMemory(long size) {
+  public static MemoryAddress allocateMemory(long size) {
     return _UNSAFE.allocateMemory(size);
   }
 
@@ -203,9 +203,9 @@ public final class Platform {
     _UNSAFE.freeMemory(address);
   }
 
-  public static long reallocateMemory(long address, long oldSize, long newSize) {
-    long newMemory = _UNSAFE.allocateMemory(newSize);
-    copyMemory(null, address, null, newMemory, oldSize);
+  public static long reallocateMemory(MemoryAddress address, long oldSize, long newSize) {
+    MemoryAddress newMemory = _UNSAFE.allocateMemory(newSize);
+    copyMemory(address, 0, newMemory, 0, oldSize);
     freeMemory(address);
     return newMemory;
   }

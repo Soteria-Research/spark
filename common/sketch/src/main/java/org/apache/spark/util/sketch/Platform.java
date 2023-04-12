@@ -99,6 +99,7 @@ final class Platform {
     _UNSAFE.putObjectVolatile(object, offset, value);
   }
 
+  //MOJO, don't think this is used anywhere??
   public static long allocateMemory(long size) {
     return _UNSAFE.allocateMemory(size);
   }

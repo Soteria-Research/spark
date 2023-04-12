@@ -18,6 +18,7 @@
 package org.apache.spark.unsafe.memory;
 
 import org.apache.spark.unsafe.Platform;
+import jdk.internal.vm.memory.MemoryAddress;
 
 /**
  * A simple {@link MemoryAllocator} that uses {@code Unsafe} to allocate off-heap memory.
@@ -26,8 +27,8 @@ public class UnsafeMemoryAllocator implements MemoryAllocator {
 
   @Override
   public MemoryBlock allocate(long size) throws OutOfMemoryError {
-    long address = Platform.allocateMemory(size);
-    MemoryBlock memory = new MemoryBlock(null, address, size);
+    MemoryAddress address = Platform.allocateMemory(size);
+    MemoryBlock memory = new MemoryBlock(address, 0, size);
     if (MemoryAllocator.MEMORY_DEBUG_FILL_ENABLED) {
       memory.fill(MemoryAllocator.MEMORY_DEBUG_FILL_CLEAN_VALUE);
     }
