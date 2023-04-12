@@ -199,7 +199,7 @@ public final class Platform {
     return _UNSAFE.allocateMemory(size);
   }
 
-  public static void freeMemory(long address) {
+  public static void freeMemory(MemoryAddress address) {
     _UNSAFE.freeMemory(address);
   }
 
