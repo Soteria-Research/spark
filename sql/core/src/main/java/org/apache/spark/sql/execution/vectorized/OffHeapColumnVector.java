@@ -383,7 +383,7 @@ public final class OffHeapColumnVector extends WritableColumnVector {
     } else {
       int srcOffset = srcIndex + Platform.BYTE_ARRAY_OFFSET;
       MemoryAddress offset = data.add(8L * rowId);
-      for (int i = 0; i < count; ++i, offset.add(8), srcOffset += 8) {
+      for (int i = 0; i < count; ++i, offset = offset.add(8), srcOffset += 8) {
         Platform.putLong(offset,
             java.lang.Long.reverseBytes(Platform.getLong(src, srcOffset)));
       }
