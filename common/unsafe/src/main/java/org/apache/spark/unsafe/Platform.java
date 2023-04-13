@@ -71,11 +71,11 @@ public final class Platform {
       Class<?> cls = Class.forName("java.nio.DirectByteBuffer");
       Constructor<?> constructor;
       try {
-        constructor = cls.getDeclaredConstructor(Long.TYPE, Integer.TYPE);
+        constructor = cls.getDeclaredConstructor(MemoryAddress.TYPE, Integer.TYPE);
       } catch (NoSuchMethodException e) {
         // DirectByteBuffer(long,int) was removed in
         // https://github.com/openjdk/jdk/commit/a56598f5a534cc9223367e7faa8433ea38661db9
-        constructor = cls.getDeclaredConstructor(Long.TYPE, Long.TYPE);
+        constructor = cls.getDeclaredConstructor(MemoryAddress.TYPE, Long.TYPE);
       }
       Field cleanerField = cls.getDeclaredField("cleaner");
       try {
@@ -231,7 +231,7 @@ public final class Platform {
       // Otherwise, use internal JDK APIs to allocate a DirectByteBuffer while ignoring the JVM's
       // MaxDirectMemorySize limit (the default limit is too low and we do not want to
       // require users to increase it).
-      long memory = allocateMemory(size);
+      MemoryAddress memory = allocateMemory(size);
       ByteBuffer buffer = (ByteBuffer) DBB_CONSTRUCTOR.newInstance(memory, size);
       try {
         DBB_CLEANER_FIELD.set(buffer,
