@@ -17,6 +17,7 @@
 
 package org.apache.spark.unsafe.memory;
 
+import jdk.internal.vm.memory.MemoryAddress;
 import org.apache.spark.unsafe.Platform;
 import jdk.internal.vm.memory.MemoryAddress;
 
@@ -37,7 +38,7 @@ public class UnsafeMemoryAllocator implements MemoryAllocator {
 
   @Override
   public void free(MemoryBlock memory) {
-    assert (memory.obj == null) :
+    assert (memory.obj != null && memory.obj instanceof MemoryAddress) :
       "baseObject not null; are you trying to use the off-heap allocator to free on-heap memory?";
     assert (memory.pageNumber != MemoryBlock.FREED_IN_ALLOCATOR_PAGE_NUMBER) :
       "page has already been freed";
@@ -48,10 +49,10 @@ public class UnsafeMemoryAllocator implements MemoryAllocator {
     if (MemoryAllocator.MEMORY_DEBUG_FILL_ENABLED) {
       memory.fill(MemoryAllocator.MEMORY_DEBUG_FILL_FREED_VALUE);
     }
-    Platform.freeMemory(memory.offset);
+    Platform.freeMemory(memory.obj);
     // As an additional layer of defense against use-after-free bugs, we mutate the
     // MemoryBlock to reset its pointer.
-    memory.offset = 0;
+    memory.obj = null;
     // Mark the page as freed (so we can detect double-frees).
     memory.pageNumber = MemoryBlock.FREED_IN_ALLOCATOR_PAGE_NUMBER;
   }

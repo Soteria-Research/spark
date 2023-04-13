@@ -200,11 +200,12 @@ public final class Platform {
     return _UNSAFE.allocateMemory(size);
   }
 
-  public static void freeMemory(long address) {
+  public static void freeMemory(MemoryAddress address) {
     _UNSAFE.freeMemory(address);
   }
 
-  public static long reallocateMemory(MemoryAddress address, long oldSize, long newSize) {
+
+  public static MemoryAddress reallocateMemory(MemoryAddress address, long oldSize, long newSize) {
     MemoryAddress newMemory = _UNSAFE.allocateMemory(newSize);
     copyMemory(address, 0, newMemory, 0, oldSize);
     freeMemory(address);
