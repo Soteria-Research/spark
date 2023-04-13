@@ -22,6 +22,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
+import jdk.internal.vm.memory.MemoryAddress;
 
 import sun.misc.Unsafe;
 
@@ -195,7 +196,7 @@ public final class Platform {
     _UNSAFE.putObjectVolatile(object, offset, value);
   }
 
-  public static long allocateMemory(long size) {
+  public static MemoryAddress allocateMemory(long size) {
     return _UNSAFE.allocateMemory(size);
   }
 
@@ -203,8 +204,9 @@ public final class Platform {
     _UNSAFE.freeMemory(address);
   }
 
+
   public static MemoryAddress reallocateMemory(MemoryAddress address, long oldSize, long newSize) {
-    long newMemory = _UNSAFE.allocateMemory(newSize);
+    MemoryAddress newMemory = _UNSAFE.allocateMemory(newSize);
     copyMemory(address, 0, newMemory, 0, oldSize);
     freeMemory(address);
     return newMemory;
