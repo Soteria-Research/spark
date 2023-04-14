@@ -2893,6 +2893,7 @@
               <arg>-P:silencer:globalFilters=.*deprecated.*</arg>
             </args>
             <jvmArgs>
+              <jvmArg>-Xint</jvmArg>
               <jvmArg>-Xss128m</jvmArg>
               <jvmArg>-Xms4g</jvmArg>
               <jvmArg>-Xmx4g</jvmArg>
