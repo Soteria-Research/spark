@@ -18,6 +18,7 @@
 package org.apache.spark.unsafe.memory;
 
 import org.apache.spark.unsafe.Platform;
+
 /**
  * A simple {@link MemoryAllocator} that uses {@code Unsafe} to allocate off-heap memory.
  */
