@@ -22,7 +22,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
-import jdk.internal.vm.memory.MemoryAddress;
 
 import sun.misc.Unsafe;
 

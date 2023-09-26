@@ -17,10 +17,7 @@
 
 package org.apache.spark.unsafe.memory;
 
-import jdk.internal.vm.memory.MemoryAddress;
 import org.apache.spark.unsafe.Platform;
-import jdk.internal.vm.memory.MemoryAddress;
-
 /**
  * A simple {@link MemoryAllocator} that uses {@code Unsafe} to allocate off-heap memory.
  */

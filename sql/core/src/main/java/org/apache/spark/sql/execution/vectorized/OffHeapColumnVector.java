@@ -18,7 +18,6 @@ package org.apache.spark.sql.execution.vectorized;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import jdk.internal.vm.memory.MemoryAddress;
 
 import com.google.common.annotations.VisibleForTesting;
 
