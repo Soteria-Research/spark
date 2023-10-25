@@ -130,16 +130,17 @@ object ColumnarBatchBenchmark extends BenchmarkBase {
       for (n <- 0L until iters) {
         var ptr = data
         var i = 0
+        var offset = 0;
         while (i < count) {
-          Platform.putInt(ptr, i)
-          ptr = ptr.add(4)
+          Platform.putInt(ptr, offset, i)
+          offset += 4
           i += 1
         }
-        ptr = data
         i = 0
+        offset = 0
         while (i < count) {
-          sum += Platform.getInt(ptr)
-          ptr = ptr.add(4)
+          sum += Platform.getInt(ptr, offset)
+          offset += 4
           i += 1
         }
       }
