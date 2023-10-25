@@ -114,9 +114,9 @@ public final class OffHeapColumnVector extends WritableColumnVector {
 
   @Override
   public void putNulls(int rowId, int count) {
-    MemoryAddress offset = nulls.add(rowId);
+    long offset = rowId;
     for (int i = 0; i < count; ++i, ++offset) {
-      Platform.putByte(offset, (byte) 1);
+      Platform.putByte(nulls, offset, (byte) 1);
     }
     numNulls += count;
   }
@@ -124,9 +124,9 @@ public final class OffHeapColumnVector extends WritableColumnVector {
   @Override
   public void putNotNulls(int rowId, int count) {
     if (!hasNull()) return;
-    MemoryAddress offset = nulls.add(rowId);
+    long offset = rowId;
     for (int i = 0; i < count; ++i, ++offset) {
-      Platform.putByte(offset, (byte) 0);
+      Platform.putByte(nulls, offset, (byte) 0);
     }
   }
 
@@ -237,9 +237,9 @@ public final class OffHeapColumnVector extends WritableColumnVector {
 
   @Override
   public void putShorts(int rowId, int count, short value) {
-    MemoryAddress offset = data.add(2L * rowId);
-    for (int i = 0; i < count; ++i, offset = offset.add(2)) {
-      Platform.putShort(offset, value);
+    long offset = 2L * rowId;
+    for (int i = 0; i < count; ++i, offset += 2)) {
+      Platform.putShort(data, offset, value);
     }
   }
 
@@ -283,9 +283,9 @@ public final class OffHeapColumnVector extends WritableColumnVector {
 
   @Override
   public void putInts(int rowId, int count, int value) {
-    MemoryAddress offset = data.add(4L * rowId);
-    for (int i = 0; i < count; ++i, offset = offset.add(4)) {
-      Platform.putInt(offset, value);
+    long offset = 4L * rowId;
+    for (int i = 0; i < count; ++i, offset += 4) {
+      Platform.putInt(data, offset, value);
     }
   }
 
@@ -308,9 +308,9 @@ public final class OffHeapColumnVector extends WritableColumnVector {
           data, 4L * rowId, count * 4L);
     } else {
       int srcOffset = srcIndex + Platform.BYTE_ARRAY_OFFSET;
-      MemoryAddress offset = data.add(4L * rowId);
-      for (int i = 0; i < count; ++i, offset = offset.add(4), srcOffset += 4) {
-        Platform.putInt(offset,
+      long offset = 4L * rowId;
+      for (int i = 0; i < count; ++i, offset += 4, srcOffset += 4) {
+        Platform.putInt(data, offset,
             java.lang.Integer.reverseBytes(Platform.getInt(src, srcOffset)));
       }
     }
@@ -356,9 +356,9 @@ public final class OffHeapColumnVector extends WritableColumnVector {
 
   @Override
   public void putLongs(int rowId, int count, long value) {
-    MemoryAddress offset = data.add(8L * rowId);
+    long offset = 8L * rowId;
     for (int i = 0; i < count; ++i, offset += 8) {
-      Platform.putLong(offset, value);
+      Platform.putLong(data, offset, value);
     }
   }
 
@@ -381,9 +381,9 @@ public final class OffHeapColumnVector extends WritableColumnVector {
           data, 8L * rowId, count * 8L);
     } else {
       int srcOffset = srcIndex + Platform.BYTE_ARRAY_OFFSET;
-      MemoryAddress offset = data.add(8L * rowId);
-      for (int i = 0; i < count; ++i, offset = offset.add(8), srcOffset += 8) {
-        Platform.putLong(offset,
+      long offset = 8L * rowId;
+      for (int i = 0; i < count; ++i, offset += 8, srcOffset += 8) {
+        Platform.putLong(data, offset,
             java.lang.Long.reverseBytes(Platform.getLong(src, srcOffset)));
       }
     }
@@ -417,9 +417,9 @@ public final class OffHeapColumnVector extends WritableColumnVector {
 
   @Override
   public void putFloats(int rowId, int count, float value) {
-    MemoryAddress offset = data.add(4L * rowId);
-    for (int i = 0; i < count; ++i, offset = offset.add(4)) {
-      Platform.putFloat(offset, value);
+    long offset = 4L * rowId;
+    for (int i = 0; i < count; ++i, offset += 4) {
+      Platform.putFloat(data, offset, value);
     }
   }
 
@@ -441,9 +441,9 @@ public final class OffHeapColumnVector extends WritableColumnVector {
       putFloats(rowId, count, src, srcIndex);
     } else {
       ByteBuffer bb = ByteBuffer.wrap(src).order(ByteOrder.LITTLE_ENDIAN);
-      MemoryAddress offset = data.add(4L * rowId);
-      for (int i = 0; i < count; ++i, offset = offset.add(4)) {
-        Platform.putFloat(offset, bb.getFloat(srcIndex + (4 * i)));
+      long offset = 4L * rowId;
+      for (int i = 0; i < count; ++i, offset += 4) {
+        Platform.putFloat(data, offset, bb.getFloat(srcIndex + (4 * i)));
       }
     }
   }
@@ -477,9 +477,9 @@ public final class OffHeapColumnVector extends WritableColumnVector {
 
   @Override
   public void putDoubles(int rowId, int count, double value) {
-    MemoryAddress offset = data.add(8L * rowId);
-    for (int i = 0; i < count; ++i, offset = offset.add(8)) {
-      Platform.putDouble(offset, value);
+    long offset = 8L * rowId;
+    for (int i = 0; i < count; ++i, offset += 8) {
+      Platform.putDouble(data, offset, value);
     }
   }
 
@@ -501,9 +501,9 @@ public final class OffHeapColumnVector extends WritableColumnVector {
       putDoubles(rowId, count, src, srcIndex);
     } else {
       ByteBuffer bb = ByteBuffer.wrap(src).order(ByteOrder.LITTLE_ENDIAN);
-      MemoryAddress offset = data.add(8L * rowId);
-      for (int i = 0; i < count; ++i, offset = offset.add(8)) {
-        Platform.putDouble(offset, bb.getDouble(srcIndex + (8 * i)));
+      long offset = 8L * rowId;
+      for (int i = 0; i < count; ++i, offset += 8) {
+        Platform.putDouble(data, offset, bb.getDouble(srcIndex + (8 * i)));
       }
     }
   }
