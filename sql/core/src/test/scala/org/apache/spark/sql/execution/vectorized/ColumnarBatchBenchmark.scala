@@ -125,21 +125,22 @@ object ColumnarBatchBenchmark extends BenchmarkBase {
 
     // Using unsafe memory
     val unsafeBuffer = { i: Int =>
-      val data: Long = Platform.allocateMemory(count * 4)
+      val data: MemoryAddress = Platform.allocateMemory(count * 4)
       var sum = 0L
       for (n <- 0L until iters) {
         var ptr = data
         var i = 0
+        var offset = 0;
         while (i < count) {
-          Platform.putInt(null, ptr, i)
-          ptr += 4
+          Platform.putInt(ptr, offset, i)
+          offset += 4
           i += 1
         }
-        ptr = data
         i = 0
+        offset = 0
         while (i < count) {
-          sum += Platform.getInt(null, ptr)
-          ptr += 4
+          sum += Platform.getInt(ptr, offset)
+          offset += 4
           i += 1
         }
       }
@@ -229,19 +230,19 @@ object ColumnarBatchBenchmark extends BenchmarkBase {
 
     // Access by going through a batch of unsafe rows.
     val unsafeRowOffheap = { i: Int =>
-      val buffer = Platform.allocateMemory(count * 16)
+      val buffer: MemoryAddress = Platform.allocateMemory(count * 16)
       var sum = 0L
       for (n <- 0L until iters) {
         val row = new UnsafeRow(1)
         var i = 0
         while (i < count) {
-          row.pointTo(null, buffer + i * 16, 16)
+          row.pointTo(buffer, i * 16, 16)
           row.setInt(0, i)
           i += 1
         }
         i = 0
         while (i < count) {
-          row.pointTo(null, buffer + i * 16, 16)
+          row.pointTo(buffer, i * 16, 16)
           sum += row.getInt(0)
           i += 1
         }

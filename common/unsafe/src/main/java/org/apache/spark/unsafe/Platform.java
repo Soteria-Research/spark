@@ -70,7 +70,7 @@ public final class Platform {
       Class<?> cls = Class.forName("java.nio.DirectByteBuffer");
       Constructor<?> constructor;
       try {
-        constructor = cls.getDeclaredConstructor(Long.TYPE, Integer.TYPE);
+        constructor = cls.getDeclaredConstructor(MemoryAddress.class, Integer.TYPE);
       } catch (NoSuchMethodException e) {
         // DirectByteBuffer(long,int) was removed in
         // https://github.com/openjdk/jdk/commit/a56598f5a534cc9223367e7faa8433ea38661db9
@@ -195,17 +195,18 @@ public final class Platform {
     _UNSAFE.putObjectVolatile(object, offset, value);
   }
 
-  public static long allocateMemory(long size) {
-    return _UNSAFE.allocateMemory(size);
+  public static MemoryAddress allocateMemory(long size) {
+    return _UNSAFE.allocateMemoryObject(size);
   }
 
-  public static void freeMemory(long address) {
+  public static void freeMemory(MemoryAddress address) {
     _UNSAFE.freeMemory(address);
   }
 
-  public static long reallocateMemory(long address, long oldSize, long newSize) {
-    long newMemory = _UNSAFE.allocateMemory(newSize);
-    copyMemory(null, address, null, newMemory, oldSize);
+
+  public static MemoryAddress reallocateMemory(MemoryAddress address, long oldSize, long newSize) {
+    MemoryAddress newMemory = _UNSAFE.allocateMemoryObject(newSize);
+    copyMemory(address, 0, newMemory, 0, oldSize);
     freeMemory(address);
     return newMemory;
   }
@@ -229,7 +230,7 @@ public final class Platform {
       // Otherwise, use internal JDK APIs to allocate a DirectByteBuffer while ignoring the JVM's
       // MaxDirectMemorySize limit (the default limit is too low and we do not want to
       // require users to increase it).
-      long memory = allocateMemory(size);
+      MemoryAddress memory = allocateMemory(size);
       ByteBuffer buffer = (ByteBuffer) DBB_CONSTRUCTOR.newInstance(memory, size);
       try {
         DBB_CLEANER_FIELD.set(buffer,
