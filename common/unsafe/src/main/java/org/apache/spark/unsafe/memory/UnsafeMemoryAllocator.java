@@ -36,6 +36,8 @@ public class UnsafeMemoryAllocator implements MemoryAllocator {
 
   @Override
   public void free(MemoryBlock memory) {
+    assert (memory.obj == null) :
+      "baseObject should be a MemoryAddress if are you trying to use the off-heap allocator to free on-heap memory?";
     assert (memory.obj != null && memory.obj instanceof MemoryAddress) :
       "baseObject not null; are you trying to use the off-heap allocator to free on-heap memory?";
     assert (memory.pageNumber != MemoryBlock.FREED_IN_ALLOCATOR_PAGE_NUMBER) :
